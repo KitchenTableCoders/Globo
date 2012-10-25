@@ -1,68 +1,57 @@
+ejecta.require("easeljs/utils/UID.js");
+ejecta.require("easeljs/utils/Ticker.js");
+ejecta.require("easeljs/geom/Matrix2D.js");
+ejecta.require("easeljs/geom/Rectangle.js");
+ejecta.require("easeljs/display/DisplayObject.js");
+ejecta.require("easeljs/display/Container.js");
+ejecta.require("easeljs/display/Stage.js");
+ejecta.require("easeljs/display/Bitmap.js");
+ejecta.require("easeljs/display/BitmapAnimation.js");
+ejecta.require("easeljs/display/SpriteSheet.js");
+ejecta.require("easeljs/geom/Point.js");
+ejecta.require("easeljs/events/MouseEvent.js");
+ejecta.require("easeljs/ui/Touch.js");
+ejecta.require("easeljs/display/Shape.js");
+ejecta.require("easeljs/display/Graphics.js");
 
 
 var c = createjs,
-	pitarupaterson = {},
-	p; // shortcut for prototypes
+    p; // shortcut for prototypes
 
+var canvas = document.getElementById("canvas");
+canvas.width = 640;
+canvas.height = 960;
+var ctx = canvas.getContext('2d');
 
+ejecta.require("Globo/src/spritesheet.js");
+
+init();
 function init() {
 
-	var canvas = document.getElementById("canvas"),
-		stage = new c.Stage(canvas),
+
+    var stage = new c.Stage(canvas),
 		globo = new pitarupaterson.Globo();
 
+    imgPath = "Globo/img/";
+    
 	c.Ticker.setFPS(30);
 	c.Ticker.addListener(stage);
 
 	globo.x = 320;
 	globo.y = 350;
+    globo.scaleX = globo.scaleY = 2;
 	stage.addChild(globo);
-
-	console.log(globo);
+    
+    // enable touch interactions if supported on the current device:
+    createjs.Touch.enable(stage);
+    
+    // enabled mouse over / out events
+    //stage.enableMouseOver(10);
+    stage.mouseMoveOutside = true; // keep tracking the mouse even when it leaves the canvas
+    
+	//console.log(globo);
 
 }
 
 
-pitarupaterson.Globo = function() { this.initialize(); };
-p = pitarupaterson.Globo.prototype = new c.Container();
-p.Container_initialize = p.initialize;
-p.initialize = function() {
-
-	this.Container_initialize();
-
-	var globo = this,
-		sections = [
-			new c.BitmapAnimation(
-				new c.SpriteSheet({"images": ["img/globo-1.png"], "frames": {"regY": 152, "height": 156, "regX": 57, "width": 106, "count": 8}, "animations": {"all": [0, 7]}})
-			),
-			new c.BitmapAnimation(
-				new c.SpriteSheet({"images": ["img/globo-2.png"], "frames": {"regY": 103, "height": 184, "regX": 136, "width": 271, "count": 16}, "animations": {"all": [0, 15]}})
-			),
-			new c.BitmapAnimation(
-				new c.SpriteSheet({"images": ["img/globo-3.png"], "frames": {"regY": 95, "height": 117, "regX": 90, "width": 177, "count": 32}, "animations": {"all": [0, 31]}})
-			),
-			new c.BitmapAnimation(
-				new c.SpriteSheet({"animations": {"all": [0, 16]}, "images": ["img/globo-4.png"], "frames": {"regY": 112, "height": 215, "regX": 106, "width": 210, "count": 17}})
-			)
-		],
-		yPositions = [0, 50, 116, 186];
-
-
-	_.each(sections, function(section, index) {
-		section.y = yPositions[index];
-		section.play();
-		section.onPress = function() {
-			if (section.paused) {
-				section.play();
-			} else {
-				section.stop();
-			}
-		};
-	});
-
-	_.each( _.toArray(sections).reverse(), function(section) {
-		globo.addChild(section);
-	} );
-
-};
 
