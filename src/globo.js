@@ -51,7 +51,7 @@ p.initialize = function() {
 	_.each(sections, function(section, index) {
 		section.y = yPositions[index];
 		section.play();
-		section.onPress = function() {
+		section.onPress = function fargle(e) {
 			if (section.paused) {
 				section.play();
 			} else {
